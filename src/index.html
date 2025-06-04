@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="shortcut icon" href="/favicon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="stylesheet" href="/leaflet.css" />
+    <link rel="stylesheet" href="/font-awesome.css" />
+    <script src="/leaflet.js"></script>
+    <script src="/feather-icons.js" defer></script>
+    <title>StoryApp</title>
+    <style>
+      .skip-link {
+        position: absolute;
+        top: -40px;
+        left: 0;
+        background: #fff;
+        padding: 8px 16px;
+        border-bottom-right-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        transition: top 0.2s ease;
+      }
+      .skip-link:focus {
+        top: 0;
+        outline: 3px dashed #000;
+        outline-offset: -3px;
+      }
+    </style>
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("/service-worker.js").then(
+            (reg) => console.log("Service Worker registered:", reg),
+            (err) => console.error("Service Worker registration failed:", err)
+          );
+        });
+      }
+      window.feather = window.feather || {
+        replace: () => console.warn("Feather Icons tidak tersedia"),
+      };
+    </script>
+  </head>
+  <body>
+    <a
+      href="#main-content"
+      class="skip-link"
+      tabindex="0"
+      aria-label="Lewati ke konten utama"
+    >
+      Lewati ke konten utama
+    </a>
+    <header>
+      <div class="main-header container">
+        <a class="brand-name" href="#/" aria-label="Beranda">StoryApp</a>
+        <nav
+          id="navigation-drawer"
+          class="navigation-drawer"
+          role="navigation"
+          aria-label="Navigasi Utama"
+        >
+          <ul id="nav-list" class="nav-list">
+            <li><a href="#/" aria-label="Beranda">Beranda</a></li>
+            <li><a href="#/about" aria-label="Tentang">About</a></li>
+            <li>
+              <a href="#/add-story" aria-label="Tambah Cerita">Tambah Cerita</a>
+            </li>
+            <li>
+              <a href="#/pending-stories" aria-label="Cerita Tertunda"
+                >Cerita Tertunda</a
+              >
+            </li>
+            <!-- Tambahkan ini -->
+            <li class="auth-link">
+              <a href="#/login" aria-label="Login">Login</a>
+            </li>
+            <li class="auth-link">
+              <a href="#/register" aria-label="Register">Register</a>
+            </li>
+            <li class="logout-link">
+              <a href="#" id="logout-button" aria-label="Logout">Logout</a>
+            </li>
+          </ul>
+        </nav>
+        <button
+          id="drawer-button"
+          class="drawer-button"
+          aria-label="Toggle navigation menu"
+        >
+          ☰
+        </button>
+      </div>
+    </header>
+    <main
+      id="main-content"
+      class="main-content"
+      role="main"
+      aria-label="Konten Utama"
+      tabindex="-1"
+    ></main>
+    <footer>
+      <div class="container">
+        <p>© 2025 StoryApp. All rights reserved.</p>
+      </div>
+    </footer>
+    <!-- Tidak perlu <script> manual, HtmlWebpackPlugin akan menyisipkan /js/app.bundle.js -->
+  </body>
+</html>
