@@ -1,4 +1,7 @@
 import HomePresenter from "./home-presenter.js";
+import StoryModel from "../../model/storyModel.js";
+import AuthModel from "../../model/authModel.js";
+import api from "../../data/api.js";
 import { getStories, saveStories } from "../../utils/indexedDB.js";
 
 // Configure Leaflet marker icons
@@ -28,60 +31,17 @@ export default class HomePage {
     this._storiesContainer = null;
     this._loading = null;
     this._mapContainer = null;
+    this._offlineMessage = null;
     this.#map = null;
-    this.#initialize().catch((error) => {
-      console.error("Gagal menginisialisasi HomePage:", error);
-    });
+    this.#initialize();
   }
 
-  async #initialize() {
-    try {
-      const apiModule = await import("../../data/api.js");
-      const api = apiModule.default;
-      console.log("Imported API:", api);
-
-      const StoryModel = class {
-        constructor(api) {
-          this.api = api;
-        }
-        async getStories(token) {
-          console.log("Calling getStories with API:", this.api);
-          if (navigator.onLine) {
-            const result = await this.api.getStories(token);
-            console.log("StoryModel getStories result:", result);
-            if (result.error)
-              throw new Error(result.message || "Gagal mengambil cerita");
-            await saveStories(result.listStory || []);
-            return result.listStory || [];
-          } else {
-            const cachedStories = await getStories();
-            console.log("Offline: Retrieved cached stories:", cachedStories);
-            return cachedStories || [];
-          }
-        }
-      };
-      const storyModel = new StoryModel(api);
-
-      const authModel = new (class {
-        getToken() {
-          const token = localStorage.getItem("user_token");
-          console.log("Token from localStorage:", token);
-          return token;
-        }
-        isLoggedIn() {
-          return !!this.getToken();
-        }
-      })();
-
-      this.#presenter = new HomePresenter({
-        view: this,
-        storyModel: storyModel,
-        authModel: authModel,
-      });
-    } catch (error) {
-      console.error("Error during initialization:", error);
-      throw error;
-    }
+  #initialize() {
+    this.#presenter = new HomePresenter({
+      view: this,
+      storyModel: new StoryModel(api),
+      authModel: new AuthModel(),
+    });
   }
 
   async render() {
@@ -120,7 +80,6 @@ export default class HomePage {
     }
 
     try {
-      await this.#initialize();
       if (!this.#presenter) {
         throw new Error("Presenter tidak diinisialisasi dengan benar");
       }

@@ -2,7 +2,6 @@ import L from "leaflet";
 import AddStoryPresenter from "./add-story-presenter.js";
 import StoryModel from "../../model/storyModel.js";
 import api from "../../data/api.js";
-import { savePendingStory } from "../../utils/indexedDB.js";
 
 // Use local marker images
 const markerIcon = "/icons/marker-icon.png";
@@ -82,7 +81,7 @@ export default class AddStoryPage {
     this._setupEventListeners();
   }
 
-  _initCamera() {
+  _initCamera = () => {
     const video = document.getElementById("camera");
     const canvas = document.getElementById("photoCanvas");
     const preview = document.getElementById("preview");
@@ -107,9 +106,9 @@ export default class AddStoryPage {
         this._presenter.onCameraError();
         this._stopCamera(); // Hentikan kamera jika ada error
       });
-  }
+  };
 
-  _initMap() {
+  _initMap = () => {
     const map = L.map("map").setView([-6.2, 106.8], 5);
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: "© OpenStreetMap contributors",
@@ -128,9 +127,9 @@ export default class AddStoryPage {
         .bindPopup("Lokasi dipilih")
         .openPopup();
     });
-  }
+  };
 
-  _setupEventListeners() {
+  _setupEventListeners = () => {
     const form = document.getElementById("story-form");
     this._offlineMessage = document.getElementById("offline-message");
     form.addEventListener("submit", async (e) => {
@@ -155,7 +154,7 @@ export default class AddStoryPage {
       }
 
       if (!navigator.onLine) {
-        await savePendingStory({
+        await this._presenter.savePendingStory({
           description,
           photoDataUrl,
           lat,
@@ -176,28 +175,28 @@ export default class AddStoryPage {
     });
 
     window.addEventListener("hashchange", this._cleanup.bind(this));
-    window.addEventListener("beforeunload", this._cleanup.bind(this)); // Tambahkan event ini
-  }
+    window.addEventListener("beforeunload", this._cleanup.bind(this));
+  };
 
-  _stopCamera() {
+  _stopCamera = () => {
     if (this._cameraStream) {
       this._cameraStream.getTracks().forEach((track) => {
-        track.stop(); // Hentikan setiap track
-        track.enabled = false; // Nonaktifkan track untuk jaga-jaga
+        track.stop();
+        track.enabled = false;
       });
-      this._cameraStream = null; // Reset referensi stream
+      this._cameraStream = null;
       const video = document.getElementById("camera");
       if (video) {
-        video.srcObject = null; // Hapus sumber video
-        video.pause(); // Jeda pemutaran video
+        video.srcObject = null;
+        video.pause();
       }
     }
-  }
+  };
 
-  _cleanup() {
+  _cleanup = () => {
     this._stopCamera();
     window.removeEventListener("hashchange", this._cleanup.bind(this));
-  }
+  };
 
   showLoading() {
     const loading = document.getElementById("loading");

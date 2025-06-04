@@ -1,9 +1,11 @@
 import AppView from "./app/app-view.js";
+import AppPresenter from "./app/app-presenter.js";
 import routes from "../routes/routes.js";
 import { getActiveRoute } from "../routes/url-parser.js";
+import AuthModel from "../model/authModel.js";
 
 export default class App {
-  #view;
+  #presenter;
 
   constructor({ navigationDrawer, drawerButton, content }) {
     console.log("App: Initializing with navigationDrawer:", navigationDrawer);
@@ -15,29 +17,17 @@ export default class App {
       });
       return;
     }
-    this.#view = new AppView({ navigationDrawer, drawerButton, content });
+    this.#presenter = new AppPresenter({
+      view: new AppView({ navigationDrawer, drawerButton, content }),
+      authModel: new AuthModel(),
+      routes,
+      getActiveRoute,
+    });
     this._initApp();
   }
 
   _initApp() {
-    console.log("App: Setting up hashchange listener");
-    window.addEventListener("hashchange", () => this.renderPage());
-  }
-
-  async renderPage() {
-    console.log("App: Rendering page");
-    const url = getActiveRoute();
-    console.log("App: Current route:", url);
-    const Page = routes[url];
-    if (!Page) {
-      console.error("Route not found:", url);
-      this.#view.showUnauthorizedMessage();
-      return;
-    }
-    const page = new Page();
-    await this.#view.showPageContent(
-      await page.render(),
-      page.afterRender?.bind(page)
-    );
+    console.log("App: Setting up initial render");
+    this.#presenter.renderPage();
   }
 }

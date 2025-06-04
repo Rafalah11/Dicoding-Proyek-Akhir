@@ -6,12 +6,12 @@ import AboutPage from "../pages/about/about-page.js";
 import PendingStoriesPage from "../pages/pending-stories/pending-stories-page.js";
 
 const routes = {
-  "/": HomePage,
-  "/login": LoginPage,
-  "/register": RegisterPage,
-  "/add-story": AddStoryPage,
-  "/pending-stories": PendingStoriesPage,
-  "/about": AboutPage,
+  "/": new HomePage(),
+  "/login": new LoginPage(),
+  "/register": new RegisterPage(),
+  "/add-story": new AddStoryPage(),
+  "/pending-stories": new PendingStoriesPage(),
+  "/about": new AboutPage(),
 };
 
 export default routes;

@@ -1,4 +1,5 @@
 import CONFIG from "../config.js";
+import { savePendingStory as saveToIndexedDB } from "../utils/indexedDB.js";
 
 export default class StoryModel {
   constructor(api) {
@@ -67,6 +68,22 @@ export default class StoryModel {
     } catch (error) {
       console.error("Error submitting story:", error);
       throw new Error(`Gagal mengirim cerita: ${error.message}`);
+    }
+  }
+
+  async savePendingStory({ description, photoDataUrl, lat, lon, createdAt }) {
+    try {
+      console.log("Saving pending story to IndexedDB:", {
+        description,
+        lat,
+        lon,
+        createdAt,
+      });
+      await saveToIndexedDB({ description, photoDataUrl, lat, lon, createdAt });
+      console.log("Pending story saved successfully");
+    } catch (error) {
+      console.error("Error saving pending story:", error);
+      throw new Error(`Gagal menyimpan cerita tertunda: ${error.message}`);
     }
   }
 

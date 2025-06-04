@@ -192,4 +192,8 @@ export default class AppView {
   updateAuthUI() {
     this._forceUpdateAuthUI();
   }
+
+  setHashChangeListener(callback) {
+    window.addEventListener("hashchange", callback);
+  }
 }

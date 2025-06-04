@@ -42,6 +42,22 @@ export default class AddStoryPresenter {
     }
   }
 
+  async savePendingStory({ description, photoDataUrl, lat, lon, createdAt }) {
+    try {
+      await this._model.savePendingStory({
+        description,
+        photoDataUrl,
+        lat,
+        lon,
+        createdAt,
+      });
+    } catch (error) {
+      if (this.onErrorSubmit) {
+        this.onErrorSubmit(error.message || "Gagal menyimpan cerita tertunda.");
+      }
+    }
+  }
+
   onCameraError() {
     if (this._view) {
       this._view.showMessage(
