@@ -37,18 +37,3 @@ export default class ToastUtil {
     console.log(`Toast displayed: ${message}`);
   }
 }
-
-export async function deletePendingStory(id) {
-  const db = await openDB();
-  const transaction = db.transaction([PENDING_STORIES_STORE], "readwrite");
-  const store = transaction.objectStore(PENDING_STORIES_STORE);
-
-  return new Promise((resolve, reject) => {
-    const request = store.delete(id);
-    request.onsuccess = () => {
-      ToastUtil.showToast("Cerita tertunda berhasil dihapus");
-      resolve();
-    };
-    request.onerror = () => reject(request.error);
-  });
-}

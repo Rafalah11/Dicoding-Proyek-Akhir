@@ -89,7 +89,7 @@ export default class PendingStoriesPage {
         storyItem.remove();
       }
       ToastUtil.showToast("Cerita berhasil dihapus!");
-      await this._renderStories(); // Perbarui UI
+      await this._renderStories();
     } catch (error) {
       console.error("Gagal menghapus cerita:", error);
       ToastUtil.showToast("Gagal menghapus cerita: " + error.message);
